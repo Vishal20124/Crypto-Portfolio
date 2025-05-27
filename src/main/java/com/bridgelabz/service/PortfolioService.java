@@ -1,5 +1,5 @@
 package com.bridgelabz.service;
 
-public class service {
+public class PortfolioService {
 
 }

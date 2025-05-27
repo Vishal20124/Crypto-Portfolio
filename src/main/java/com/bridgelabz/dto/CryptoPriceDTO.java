@@ -1,5 +1,5 @@
 package com.bridgelabz.dto;
 
-public class dto {
+public class CryptoPriceDTO {
 
 }

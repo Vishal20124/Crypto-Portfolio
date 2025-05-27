@@ -1,5 +1,5 @@
 package com.bridgelabz.controller;
 
-public class TestController {
+public class AuthController {
 
 }

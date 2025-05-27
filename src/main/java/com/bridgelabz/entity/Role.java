@@ -1,5 +1,5 @@
 package com.bridgelabz.entity;
 
-public class User {
+public class Role {
 
 }
