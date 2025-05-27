@@ -8,7 +8,6 @@ public class CryptoPortfolioApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CryptoPortfolioApplication.class, args);
-		System.out.println("Hello world");
 	}
 
 }
