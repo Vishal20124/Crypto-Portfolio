@@ -1,5 +1,2 @@
-package com.bridgelabz.service;
-
-public class PortfolioService {
-
-}
+CryptoHolding holding = holdingRepo.findById(id)
+    .orElseThrow(() -> new ResourceNotFoundException("Holding not found with ID: " + id));
