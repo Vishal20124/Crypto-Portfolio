@@ -30,7 +30,6 @@ public class CryptoController {
         return ResponseEntity.ok(prices);
     }
 
-    // Get portfolio valuation for a user
     @GetMapping("/valuation/{userId}")
     public ResponseEntity<List<CryptoValuationDTO>> getUserValuation(@PathVariable Long userId) {
         List<CryptoValuationDTO> valuations = valuationService.getValuationsForUser(userId);
