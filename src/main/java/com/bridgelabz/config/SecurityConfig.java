@@ -1,27 +1,24 @@
-/*package com.bridgelabz.config;
+package com.bridgelabz.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 @Configuration
-@EnableMethodSecurity  // enables @PreAuthorize annotations
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable()) 
-
+        return http
+            .csrf(csrf -> csrf.disable()) // Disable CSRF
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()  
-                .anyRequest().authenticated()                 )
-            .httpBasic();  
-
-        return http.build();
+                .anyRequest().permitAll() // Allow all requests without auth
+            )
+            .httpBasic(Customizer.withDefaults()) // Optional: enables basic auth (can remove if not needed)
+            .build();
     }
 }
-*/
-
