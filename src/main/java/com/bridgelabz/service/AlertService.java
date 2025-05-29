@@ -20,8 +20,8 @@ public class AlertService {
         return alertRepository.save(alert);
     }
 
-    public List<Alert> getAlertsByUserId(Long userId) {
-        return alertRepository.findByUserId(userId);
+    public List<Alert> getAlertsByUserId(long i) {
+        return alertRepository.findByUserId(i);
     }
 
     public List<Alert> getTriggeredAlerts() {

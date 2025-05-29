@@ -35,7 +35,7 @@ public class Alert {
     public void setId(Long id) { this.id = id; }
 
     public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public void setUserId(long i) { this.userId = i; }
 
     public String getSymbol() { return symbol; }
     public void setSymbol(String symbol) { this.symbol = symbol; }

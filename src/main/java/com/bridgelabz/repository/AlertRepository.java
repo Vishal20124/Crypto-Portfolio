@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AlertRepository extends JpaRepository<Alert, Long> {
-    List<Alert> findByUserId(Long userId);
+    List<Alert> findByUserId(long i);
     List<Alert> findByStatus(String status);
 }
