@@ -13,12 +13,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
-            .authorizeHttpRequests()
-            .requestMatchers("/auth/register").permitAll()  // 👈 Allow registration
-            .anyRequest().authenticated()  // All others require auth
-            .and()
-            .httpBasic();  // or .formLogin() if you're using form login
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/auth/register",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/v3/api-docs/**"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
+            .httpBasic();  // or use .formLogin() if needed
 
         return http.build();
     }
