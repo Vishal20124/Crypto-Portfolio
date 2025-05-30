@@ -1,15 +1,23 @@
 package com.bridgelabz.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.bridgelabz.exception.CustomExceptions.ApiException;
 
 @Service
 public class CoinGeckoService {
 
-    @Autowired
-    private CoinGeckoApiClient coinGeckoApiClient;
+    private final CoinGeckoApiClient coinGeckoApiClient;
+
+    public CoinGeckoService(CoinGeckoApiClient coinGeckoApiClient) {
+        this.coinGeckoApiClient = coinGeckoApiClient;
+    }
 
     public Double getCurrentPrice(String symbol) {
-        return coinGeckoApiClient.fetchCurrentPrice(symbol);
+        Double price = coinGeckoApiClient.fetchCurrentPrice(symbol);
+        if (price == null) {
+            throw new ApiException("Failed to fetch current price for symbol: " + symbol);
+        }
+        return price;
     }
 }

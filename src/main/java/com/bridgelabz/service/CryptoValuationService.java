@@ -1,13 +1,12 @@
 package com.bridgelabz.service;
 
-
-import org.springframework.stereotype.Service;
-
 import com.bridgelabz.dto.CryptoValuationDTO;
 import com.bridgelabz.entity.CryptoHolding;
 import com.bridgelabz.entity.CryptoPrice;
+import com.bridgelabz.exception.CustomExceptions.ResourceNotFoundException;
 import com.bridgelabz.repository.CryptoHoldingRepository;
 import com.bridgelabz.repository.CryptoPriceRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public class CryptoValuationService {
 
         return holdings.stream().map(holding -> {
             CryptoPrice price = priceRepository.findById(holding.getSymbol())
-                    .orElseThrow(() -> new RuntimeException("Price not found for symbol: " + holding.getSymbol()));
+                .orElseThrow(() -> new ResourceNotFoundException("Price not found for symbol: " + holding.getSymbol()));
 
             double currentValue = holding.getQuantityHeld() * price.getCurrentPrice();
             double pnl = currentValue - (holding.getBuyPrice() * holding.getQuantityHeld());
