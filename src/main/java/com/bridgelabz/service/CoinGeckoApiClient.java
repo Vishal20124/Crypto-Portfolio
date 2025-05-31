@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+import java.util.logging.Logger;
+
 @Component
 public class CoinGeckoApiClient {
 
@@ -13,9 +16,15 @@ public class CoinGeckoApiClient {
             "?vs_currency=usd&order=market_cap_desc&per_page=100&page=1" +
             "&x_cg_demo_api_key=CG-YHdjg5kG3VpEL1CuAXvgZFgv";
 
+    private final RestTemplate restTemplate;
+    private final Logger logger = Logger.getLogger(CoinGeckoApiClient.class.getName());
+
+    public CoinGeckoApiClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
     public Double fetchCurrentPrice(String symbol) {
         try {
-            RestTemplate restTemplate = new RestTemplate();
             String response = restTemplate.getForObject(API_URL, String.class);
 
             ObjectMapper objectMapper = new ObjectMapper();
@@ -28,9 +37,8 @@ public class CoinGeckoApiClient {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace(); // You can replace with logger
+            logger.severe("Error fetching price for symbol " + symbol + ": " + e.getMessage());
         }
-
-        return 0.0; // default if not found
+        return null; // return null if not found or error
     }
 }

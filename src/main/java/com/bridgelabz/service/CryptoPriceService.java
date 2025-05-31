@@ -2,9 +2,11 @@ package com.bridgelabz.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.bridgelabz.entity.CryptoPrice;
+import com.bridgelabz.exception.CustomExceptions.ApiException;
 import com.bridgelabz.repository.CryptoPriceRepository;
 
 import java.time.LocalDateTime;
@@ -27,15 +29,24 @@ public class CryptoPriceService {
     }
 
     public List<CryptoPrice> fetchAndSaveLatestPrices() {
-        ResponseEntity<CoinGeckoResponse[]> response =
-                restTemplate.getForEntity(COINGECKO_API_URL, CoinGeckoResponse[].class);
+        try {
+            ResponseEntity<CoinGeckoResponse[]> response =
+                    restTemplate.getForEntity(COINGECKO_API_URL, CoinGeckoResponse[].class);
 
-        List<CryptoPrice> prices = Arrays.stream(response.getBody())
-                .map(cg -> new CryptoPrice(cg.getSymbol(), cg.getCurrent_price(), LocalDateTime.now()))
-                .collect(Collectors.toList());
+            if (response.getBody() == null || response.getBody().length == 0) {
+                throw new ApiException("Empty response from CoinGecko API");
+            }
 
-        cryptoPriceRepository.saveAll(prices);
-        return prices;
+            List<CryptoPrice> prices = Arrays.stream(response.getBody())
+                    .map(cg -> new CryptoPrice(cg.getSymbol(), cg.getCurrent_price(), LocalDateTime.now()))
+                    .collect(Collectors.toList());
+
+            cryptoPriceRepository.saveAll(prices);
+            return prices;
+
+        } catch (RestClientException e) {
+            throw new ApiException("Failed to fetch prices from CoinGecko API: " + e.getMessage());
+        }
     }
 
     // Inner class for mapping CoinGecko API response
@@ -58,4 +69,3 @@ public class CryptoPriceService {
         }
     }
 }
-

@@ -3,6 +3,7 @@ package com.bridgelabz.service.impl;
 import com.bridgelabz.dto.PortfolioAssetRequestDTO;
 import com.bridgelabz.dto.PortfolioAssetResponseDTO;
 import com.bridgelabz.entity.PortfolioAsset;
+import com.bridgelabz.exception.CustomExceptions.ResourceNotFoundException;
 import com.bridgelabz.repository.PortfolioAssetRepository;
 import com.bridgelabz.service.CoinGeckoService;
 import com.bridgelabz.service.PortfolioService;
@@ -35,11 +36,10 @@ public class PortfolioServiceImpl implements PortfolioService {
         return mapToResponse(saved);
     }
 
-
     @Override
     public PortfolioAssetResponseDTO updateAsset(Long id, PortfolioAssetRequestDTO requestDTO) {
         PortfolioAsset asset = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Asset not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Asset not found with id " + id));
 
         asset.setCoinName(requestDTO.getCoinName());
         asset.setSymbol(requestDTO.getSymbol().toUpperCase());
@@ -66,6 +66,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         dto.setBuyDate(asset.getBuyDate());
         return dto;
     }
+
     @Override
     public List<PortfolioAssetResponseDTO> getAllAssets() {
         List<PortfolioAsset> assets = repository.findAll();
@@ -74,6 +75,9 @@ public class PortfolioServiceImpl implements PortfolioService {
             PortfolioAssetResponseDTO dto = mapToResponse(asset);
 
             Double currentPrice = coinGeckoService.getCurrentPrice(asset.getSymbol());
+            if (currentPrice == null || currentPrice == 0.0) {
+                currentPrice = asset.getBuyPrice();
+            }
             dto.setCurrentPrice(currentPrice);
             dto.setTotalValue(currentPrice * asset.getQuantityHeld());
             dto.setProfitOrLoss((currentPrice - asset.getBuyPrice()) * asset.getQuantityHeld());
@@ -81,5 +85,4 @@ public class PortfolioServiceImpl implements PortfolioService {
             return dto;
         }).collect(Collectors.toList());
     }
-
 }
